@@ -1,0 +1,11 @@
+language: java
+jdk:
+- oraclejdk7
+script: mvn package
+deploy:
+  provider: releases
+  api_key:
+    secure: aKQ1IdRAFdji+jM1ha9I077EqsjeJtFwMXH0jmQR5EsWUE+SpWrXKasdLnc72oRm3sXOQBGlO/i2ShIgw9nquA29OnwSgoCsJ78Km+4ANh6J9TE2vLoUUovxq9yEfyEdptshUYuJp3wjZb8C/7AGoMaC3FutQwAoy5M04I7PMnU+uAADlrWOYyg71I1QZbJk8gxn26y+YTFOO4avdq49XMYhEJmkPHq2mmwUOD9mPvrhp281O2bu7ZvvsCpBRDFlKVUn4+tnxgvE5WWROB73xokfq8CQCKDSYxtEXQmms0hgCDjd3cnfhBZCgIrikMyPvlg7q6RoNI/oGzgIni4ZHwUr2jkflEb+jN07q8YxZi5iKUBa92ebLks5ghwdhID9tE19qBhL6LX22fv723BfIpK8Y/JBbfXJkcctxatBafGSrLTX3i1iialvKStMgGcmNEwcZQV+1mGkOj2JrXbkl5RSwq/TogPXA4f5l6Vhf6YDnwrh9wIizhv4f7/hKrZ+UZcCq/DzQifWt/KahOwRfTzw93yIbIkUo6a4ew7ysebehiFvL/85HhFVysKOYNLPgh2t+fXG13DcIJ+sTtJKQVSEwqM+bPzMTlREyN7MXnKMmLiFqHHt2qnv3RbOdSMHYDsUrdFxac4vemTGyFfoqy31D0XhzCqGBEeBS7+fJhc=
+  file: target/go-plugins-dist/gocd-artifactory-package-poller.jar
+  on:
+    repo: peterabbott/go-artifactory-package-poller

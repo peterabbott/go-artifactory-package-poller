@@ -1,0 +1,15 @@
+<go-plugin id="${project.artifactId}" version="${project.version}">
+    <about>
+        <name>Artifactory Package poller plugin</name>
+        <version>${project.version}</version>
+        <target-go-version>${go.version}</target-go-version>
+        <description>Plugin that polls a artifactory repository</description>
+        <vendor>
+            <name>Peter Abbott</name>
+            <url>www.github.com/peterabbott</url>
+        </vendor>
+        <target-os>
+            <value>Linux</value>
+        </target-os>
+    </about>
+</go-plugin>
