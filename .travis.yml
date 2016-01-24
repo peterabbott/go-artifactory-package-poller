@@ -9,3 +9,5 @@ deploy:
   file: target/go-plugins-dist/gocd-artifactory-package-poller.jar
   on:
     repo: peterabbott/go-artifactory-package-poller
+    tags: true
+    branches: false
