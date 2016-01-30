@@ -42,8 +42,8 @@ public class PackageRepositoryPollerIntegrationTest {
     @Test
     public void canGetSnapshotPackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("ext-snapshot-local"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("notification-gateway"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("nz.co.bnz.common.notification"));
         packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
         packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
 
@@ -55,9 +55,9 @@ public class PackageRepositoryPollerIntegrationTest {
     @Test
     public void canCheckLibReleasePackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("libs-release"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("commons-io"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("commons-io"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("nz.co.bnz.common.notification"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
 //        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
 
         CheckConnectionResultMessage checkConnectionResultMessage = underTest.checkConnectionToPackage(packageMaterialProperties, repositoryConfiguration);
@@ -69,10 +69,10 @@ public class PackageRepositoryPollerIntegrationTest {
     @Test
     public void canCheckLibReleaseSourcePackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("libs-release"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("commons-io"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("commons-io"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("tests"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("notification-gateway"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
 
         CheckConnectionResultMessage checkConnectionResultMessage = underTest.checkConnectionToPackage(packageMaterialProperties, repositoryConfiguration);
 

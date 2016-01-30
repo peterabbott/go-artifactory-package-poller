@@ -46,7 +46,7 @@ public class PackageRepositoryPoller {
     private PackageRepositoryConfigurationProvider configurationProvider;
 
     public PackageRepositoryPoller(PackageRepositoryConfigurationProvider configurationProvider) {
-        this.configurationProvider = configurationProvider;
+        this.configurationProvider = Preconditions.checkNotNull(configurationProvider);
     }
 
     public CheckConnectionResultMessage checkConnectionToRepository(PackageMaterialProperties repositoryConfiguration) {
@@ -76,7 +76,7 @@ public class PackageRepositoryPoller {
             }
 
             final String repoId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, packageConfiguration);
-            final String groupId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, packageConfiguration);
+            final String groupId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, packageConfiguration).replace(".", "/");
             final String artifactId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, packageConfiguration);
             final String classifier = getOptionalPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, packageConfiguration);
 
@@ -104,12 +104,13 @@ public class PackageRepositoryPoller {
             }
 
             final String repoId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, packageConfiguration);
-            final String groupId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, packageConfiguration);
+            final String groupId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, packageConfiguration).replace(".", "/");
             final String artifactId = getRequiredPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, packageConfiguration);
             final String classifier = getOptionalPropertyReferenceValue(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, packageConfiguration);
 
             ArtifactVersion artifactVersion = ArtifactoryHelper.findLatestVersion(artifactory, repoId, groupId, artifactId, classifier);
             if (artifactVersion != null) {
+                //String location = Joiner.on("/").join(artifactory.getUri(), artifactory.getContextName(), artifactVersion.getItem().getRepo(), artifactVersion.getItem().getPath();
                 String location = artifactory.getUri() + "/" + artifactory.getContextName() + "/" + artifactVersion.getItem().getRepo() + artifactVersion.getItem().getPath();
                 PackageRevisionMessage packageRevision = new PackageRevisionMessage(
                         artifactVersion.getVersion(),
@@ -135,8 +136,9 @@ public class PackageRepositoryPoller {
     }
 
     public PackageRevisionMessage getLatestRevisionSince(PackageMaterialProperties packageConfiguration, PackageMaterialProperties repositoryConfiguration, PackageRevisionMessage previousPackageRevision) {
-//        return new PackageRevisionMessage();
-        return getLatestRevision(packageConfiguration, repositoryConfiguration);
+        PackageRevisionMessage rev = getLatestRevision(packageConfiguration, repositoryConfiguration);
+
+        return rev;
     }
 
     private Artifactory getArtifactoryClient(PackageMaterialProperties repositoryConfiguration) {
