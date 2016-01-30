@@ -18,7 +18,7 @@ public class PackageRepositoryPollerIntegrationTest {
 
     @Before
     public void setup() {
-        artifactoryHost = System.getProperty("artifactory.host", "http://192.168.99.100:8081");
+        artifactoryHost = System.getProperty("artifactory.host", "http://127.0.0.1:8081");
         underTest = new PackageRepositoryPoller(new PackageRepositoryConfigurationProvider());
 
         repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material(artifactoryHost + "/artifactory"));
