@@ -16,6 +16,12 @@ done
 set -e
 
 echo "Creating Data"
+# setup lib release
+curl -o /dev/null --silent -w "%{http_code}" http://$HOST_AND_PORT/artifactory/libs-release/commons-io/commons-io/2.3/commons-io-2.3.jar
+curl -o /dev/null --silent -w "%{http_code}" http://$HOST_AND_PORT/artifactory/libs-release/commons-io/commons-io/2.3/commons-io-2.3-sources.jar
+curl -o /dev/null --silent -w "%{http_code}" http://$HOST_AND_PORT/artifactory/libs-release/commons-io/commons-io/2.4/commons-io-2.4.jar
+curl -o /dev/null --silent -w "%{http_code}" http://$HOST_AND_PORT/artifactory/libs-release/commons-io/commons-io/2.4/commons-io-2.4-sources.jar
+
 # recreate a snapshot scenario
 curl ${CREDS} -XPUT --data "{\"path\": \"/ext-snapshot-local/a/\"}" http://$HOST_AND_PORT/artifactory/ext-snapshot-local/a/
 curl ${CREDS} -XPUT --data "{\"path\": \"/ext-snapshot-local/a/groupId/\"}" http://$HOST_AND_PORT/artifactory/ext-snapshot-local/a/groupId/
