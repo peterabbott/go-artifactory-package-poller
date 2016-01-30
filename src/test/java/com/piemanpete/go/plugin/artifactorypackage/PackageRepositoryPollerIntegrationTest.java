@@ -18,7 +18,7 @@ public class PackageRepositoryPollerIntegrationTest {
 
     @Before
     public void setup() {
-        artifactoryHost = System.getProperty("artifactory.host", "http://127.0.0.1:8081");
+        artifactoryHost = System.getProperty("artifactory.host", "http://192.168.99.100:8081");
         underTest = new PackageRepositoryPoller(new PackageRepositoryConfigurationProvider());
 
         repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material(artifactoryHost + "/artifactory"));
@@ -27,17 +27,16 @@ public class PackageRepositoryPollerIntegrationTest {
     }
 
     @Test
-    public void canCheckSnapshotPackage() {
+    public void canCheckSnapshotPackageWithoutQualifier() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
         packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("ext-snapshot-local"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("notification-gateway"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("a.groupId"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("artifactId"));
 
         CheckConnectionResultMessage checkConnectionResultMessage = underTest.checkConnectionToPackage(packageMaterialProperties, repositoryConfiguration);
 
         assertThat(checkConnectionResultMessage.success()).describedAs(checkConnectionResultMessage.getMessages().toString()).isTrue();
-        assertThat(checkConnectionResultMessage.getMessages()).containsOnly("found 0.2.24.4-SNAPSHOT");
+        assertThat(checkConnectionResultMessage.getMessages()).containsOnly("found 1.0-SNAPSHOT");
     }
 
     @Test
