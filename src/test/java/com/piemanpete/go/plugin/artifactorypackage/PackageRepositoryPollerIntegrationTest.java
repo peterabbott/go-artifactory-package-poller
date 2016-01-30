@@ -10,17 +10,18 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class PackageRepositoryPollerIntegrationTest {
     private PackageRepositoryPoller underTest;
 
     private PackageMaterialProperties repositoryConfiguration = new PackageMaterialProperties();
+    private String artifactoryHost;
 
     @Before
     public void setup() {
+        artifactoryHost = System.getProperty("artifactory.host", "http://192.168.99.100:8081");
         underTest = new PackageRepositoryPoller(new PackageRepositoryConfigurationProvider());
 
-        repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material("http://192.168.99.100:8081/artifactory"));
+        repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material(artifactoryHost + "/artifactory"));
         repositoryConfiguration.addPackageMaterialProperty(Constants.USERNAME, material("admin"));
         repositoryConfiguration.addPackageMaterialProperty(Constants.PASSWORD, material("password"));
     }
@@ -42,22 +43,22 @@ public class PackageRepositoryPollerIntegrationTest {
     @Test
     public void canGetSnapshotPackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("nz.co.bnz.common.notification"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("ext-snapshot-local"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("a.groupId"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("artifactId"));
         packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
 
         PackageRevisionMessage latestRevision = underTest.getLatestRevision(packageMaterialProperties, repositoryConfiguration);
-
-        assertThat(latestRevision.getTrackbackUrl()).isEqualTo("http://192.168.99.100:8081/artifactory/ext-snapshot-local/notification-gateway/notification-gateway/0.2.24.4-SNAPSHOT/notification-gateway-0.2.24.4-20160123.195406-1.jar");
+        assertThat(latestRevision).isNotNull();
+        assertThat(latestRevision.getTrackbackUrl()).matches(artifactoryHost + "/artifactory/ext-snapshot-local/a/groupId/artifactId/1.0-SNAPSHOT/artifactId-1.0-(.*)-3.jar");
     }
 
     @Test
     public void canCheckLibReleasePackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("nz.co.bnz.common.notification"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("libs-release"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("commons-io"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("commons-io"));
 //        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
 
         CheckConnectionResultMessage checkConnectionResultMessage = underTest.checkConnectionToPackage(packageMaterialProperties, repositoryConfiguration);
@@ -69,10 +70,10 @@ public class PackageRepositoryPollerIntegrationTest {
     @Test
     public void canCheckLibReleaseSourcePackage() {
         PackageMaterialProperties packageMaterialProperties = new PackageMaterialProperties();
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("olb-release"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("notification-gateway"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("notification-gateway"));
-        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("jar"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_REPO_ID, material("libs-release"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_GROUP_ID, material("commons-io"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_ARTIFACT_ID, material("commons-io"));
+        packageMaterialProperties.addPackageMaterialProperty(PackageRepositoryConfigurationProvider.PACKAGE_CLASSIFIER_ID, material("sources"));
 
         CheckConnectionResultMessage checkConnectionResultMessage = underTest.checkConnectionToPackage(packageMaterialProperties, repositoryConfiguration);
 

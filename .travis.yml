@@ -1,7 +1,15 @@
+sudo: required
+services:
+- docker
 language: java
 jdk:
 - oraclejdk7
-script: mvn package
+before_install:
+- docker pull jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss:latest
+- docker run -d -p 127.0.0.1:8081:8081 jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss:latest
+- docker ps -a
+- src/test/resources/setup_integration_test.sh
+script: mvn verify
 deploy:
   provider: releases
   api_key:

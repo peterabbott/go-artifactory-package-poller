@@ -60,4 +60,38 @@ public class VersionNumberTest {
 
         assertThat(lhs).usingDefaultComparator().isEqualTo(rhs);
     }
+
+    @Test
+    public void testWithVersionQualifierLevels() {
+        VersionNumber fixedVersion = VersionNumber.from("2.0.1");
+        VersionNumber snapshot = VersionNumber.from("2.0.1-SNAPSHOT");
+        VersionNumber rc1 = VersionNumber.from("2.0.1-RC1");
+        VersionNumber rc2 = VersionNumber.from("2.0.1-RC2");
+        VersionNumber release = VersionNumber.from("2.0.1.RELEASE");
+
+        assertThat(fixedVersion).usingDefaultComparator()
+                .isGreaterThan(snapshot)
+                .isGreaterThan(rc1)
+                .isGreaterThan(rc2)
+                .isEqualTo(release);
+
+        assertThat(rc1).usingDefaultComparator()
+                .isLessThan(rc2)
+                .isLessThan(release)
+                .isLessThan(fixedVersion)
+                .isGreaterThan(snapshot);
+
+
+        assertThat(rc2).usingDefaultComparator()
+                .isGreaterThan(rc1)
+                .isGreaterThan(snapshot)
+                .isLessThan(release)
+                .isLessThan(fixedVersion);
+
+        assertThat(release).usingDefaultComparator()
+                .isGreaterThan(rc1)
+                .isGreaterThan(rc2)
+                .isGreaterThan(snapshot)
+                .isEqualTo(fixedVersion);
+    }
 }

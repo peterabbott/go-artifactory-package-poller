@@ -2,15 +2,12 @@ package com.piemanpete.go.plugin.artifactorypackage.util;
 
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.ComparisonChain;
 
 /**
  * Represent version number
@@ -76,23 +73,19 @@ public final class VersionNumber implements Serializable, Comparable<VersionNumb
     public int compareTo(VersionNumber o) {
         if (o == null) return -1;
 
-        return ComparisonChain.start()
-                .compare(major, o.getMajor())
-                .compare(minor, o.getMinor())
-                .compare(micro, o.getMicro())
-                .compare(patch, o.getPatch())
-                .compare(qualifier, o.getQualifier(), new Comparator<String>() {
-                    @Override
-                    public int compare(String lhs, String rhs) {
-                        if (Objects.equal(lhs, rhs)) {
-                            return 0;
-                        } else if (Strings.isNullOrEmpty(lhs) && !Strings.isNullOrEmpty(rhs)) {
-                            return 1;
-                        }
-                        return -1;
-                    }
-                })
-                .result();
+        if (equals(o)) {
+            return 0;
+        } else if (notEqual(major, o.getMajor())) {
+            return major - o.getMajor();
+        } else if (notEqual(minor, o.getMinor())) {
+            return minor - o.getMinor();
+        } else if (notEqual(micro, o.getMicro())) {
+            return micro - o.getMicro();
+        } else if (notEqual(patch, o.getPatch())) {
+            return patch - o.getPatch();
+        }
+
+        return compareQualifier(qualifier, o.getQualifier());
     }
 
     @Override
@@ -101,11 +94,47 @@ public final class VersionNumber implements Serializable, Comparable<VersionNumb
         if (o == null || getClass() != o.getClass()) return false;
 
         VersionNumber that = (VersionNumber) o;
-        return major == that.major &&
+
+        boolean baseVersionEquals =
+                major == that.major &&
                 minor == that.minor &&
                 micro == that.micro &&
-                patch == that.patch &&
-                Objects.equal(qualifier, that.qualifier);
+                patch == that.patch;
+
+        if (baseVersionEquals) {
+            if (Objects.equal(qualifier, that.qualifier)) {
+                return true;
+            }
+
+            // empty qualifier and RELEASE are the same
+            return MoreObjects.firstNonNull(qualifier, "RELEASE")
+                    .equals(MoreObjects.firstNonNull(that.qualifier, "RELEASE"));
+        }
+
+        return false;
+    }
+
+    private boolean notEqual(int lhs, int rhs) {
+        return lhs != rhs;
+    }
+
+    private int compareQualifier(String lhs, String rhs) {
+        int leftQualifier = mapQualifierValue(lhs);
+        int rightQualifier = mapQualifierValue(rhs);
+
+        return leftQualifier - rightQualifier;
+    }
+
+    private int mapQualifierValue(String qualifier) {
+        String value = MoreObjects.firstNonNull(qualifier, "");
+        if (value.equals("SNAPSHOT")) {
+            return 1;
+        } else if (value.matches("RC\\d+")) {
+            return 10 + Integer.parseInt(value.substring(2));
+        }
+
+        // typically be null, "", "RELEASE" or "GA" to represent released version
+        return 1000;
     }
 
     @Override
