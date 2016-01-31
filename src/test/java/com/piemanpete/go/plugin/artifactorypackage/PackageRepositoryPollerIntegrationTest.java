@@ -7,21 +7,20 @@ import com.piemanpete.go.plugin.artifactorypackage.message.PackageMaterialProper
 import com.piemanpete.go.plugin.artifactorypackage.message.PackageMaterialProperty;
 import com.piemanpete.go.plugin.artifactorypackage.message.PackageRevisionMessage;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PackageRepositoryPollerIntegrationTest {
     private PackageRepositoryPoller underTest;
 
     private PackageMaterialProperties repositoryConfiguration = new PackageMaterialProperties();
-    private String artifactoryHost;
+    private String artifactoryBaseUri;
 
     @Before
     public void setup() {
-        artifactoryHost = System.getProperty("artifactory.host", "http://192.168.99.100:8081");
+        artifactoryBaseUri = System.getProperty("artifactory.baseUri", "http://192.168.99.100:8081");
         underTest = new PackageRepositoryPoller(new PackageRepositoryConfigurationProvider());
 
-        repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material(artifactoryHost + "/artifactory"));
+        repositoryConfiguration.addPackageMaterialProperty(Constants.REPO_URL, material(artifactoryBaseUri + "/artifactory"));
         repositoryConfiguration.addPackageMaterialProperty(Constants.USERNAME, material("admin"));
         repositoryConfiguration.addPackageMaterialProperty(Constants.PASSWORD, material("password"));
     }
@@ -49,7 +48,7 @@ public class PackageRepositoryPollerIntegrationTest {
 
         PackageRevisionMessage latestRevision = underTest.getLatestRevision(packageMaterialProperties, repositoryConfiguration);
         assertThat(latestRevision).isNotNull();
-        assertThat(latestRevision.getTrackbackUrl()).matches(artifactoryHost + "/artifactory/ext-snapshot-local/a/groupId/artifactId/1.0-SNAPSHOT/artifactId-1.0-(.*)-3.jar");
+        assertThat(latestRevision.getTrackbackUrl()).matches(artifactoryBaseUri + "/artifactory/ext-snapshot-local/a/groupId/artifactId/1.0-SNAPSHOT/artifactId-1.0-(.*)-3.jar");
     }
 
     @Test

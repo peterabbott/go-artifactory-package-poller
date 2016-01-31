@@ -9,7 +9,7 @@ before_install:
 - docker run -d -p 127.0.0.1:8081:8081 jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss:latest
 - docker ps -a
 - src/test/resources/setup_integration_test.sh 127.0.0.1:8081
-script: mvn -Dartifactory.host=127.0.0.1:8081 verify
+script: mvn -Dartifactory.baseUri=http://127.0.0.1:8081 verify
 deploy:
   provider: releases
   api_key:
